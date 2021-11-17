@@ -1,0 +1,11 @@
+<%= form_with(model: @request)  do |form| %>
+  <%= form.label '名稱' %>
+  <%= form.text_field :name %>
+  <%= form.label '描述' %>
+  <%= form.text_field :description %>
+  <%= form.label '檔案' %>
+  <%= form.file_field :file %>
+  <%= form.label '擁有者地址' %>
+  <%= form.text_field :mint_to_address %>
+  <%= form.submit %>
+<% end %>
