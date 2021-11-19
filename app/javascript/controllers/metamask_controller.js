@@ -22,10 +22,10 @@ export default class extends Controller {
   }
 
   async initializeWallet() {
-    const contract_address = '0xb905fF47F1778Bb4D8aA7b177fc0ad5698165331'
+    const token_address = '0xb905fF47F1778Bb4D8aA7b177fc0ad5698165331'
     let address = await this.getAccount()
     await this.getBalance(address)
-    await this.getContractBalance(contract_address, address)
+    await this.getTokenBalance(token_address, address)
   }
 
   async getAccount() {
@@ -43,7 +43,7 @@ export default class extends Controller {
     return balance
   }
 
-  async getContractBalance(contract_address, address) {
+  async getTokenBalance(token_address, address) {
     const web3 = new Web3(ethereum)
     let minABI = [
       // balanceOf
@@ -53,11 +53,20 @@ export default class extends Controller {
         "name": "balanceOf",
         "outputs": [{ "name": "balance", "type": "uint256" }],
         "type": "function"
+      }, {
+        "constant": true,
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [{ "name": "", "type": "uint256" }],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
       }
     ];
-    const myContract = new web3.eth.Contract(minABI, contract_address)
-    let balance_in_wei = await myContract.methods.balanceOf(address).call();
-    let balance = Math.round(web3.utils.fromWei(balance_in_wei, 'ether') * 10000) / 10000
+    const myContract = new web3.eth.Contract(minABI, token_address)
+    let balance_raw = await myContract.methods.balanceOf(address).call();
+    let decimals = await myContract.methods.decimals().call();
+    let balance = Math.round(balance_raw / (10 ** decimals))
     this.token_balanceTarget.innerHTML = balance
     return balance
   }
