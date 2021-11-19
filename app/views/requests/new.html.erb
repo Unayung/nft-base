@@ -9,3 +9,9 @@
   <%= form.text_field :mint_to_address %>
   <%= form.submit %>
 <% end %>
+<div data-controller="metamask">
+  <button id="enableEthereumButton" data-action="click->metamask#connectWallet">連結錢包</button>
+  <h2>Address: <span data-metamask-target="address" ></span></h2>
+  <h2>Balance: <span data-metamask-target="balance" ></span></h2>
+  <h2>Token Balance: <span data-metamask-target="token_balance" ></span></h2>
+</div>
